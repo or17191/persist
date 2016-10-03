@@ -83,6 +83,7 @@ namespace persist{
 				ret.chain(next_from_prev(prev));
 				return ret;
 			}
+
 		private:
 			typename node_t::ptr_t first_;
 			node_t* last_;
@@ -120,4 +121,20 @@ namespace persist{
 						first_; // prev doesn't have a next
 			}
 	};
-};
+
+	template<typename DataType>
+	bool operator==(const list<DataType>& lhs, const list<DataType>& rhs){
+		if(lhs.size() != rhs.size()){
+			return false;
+		}
+		for(auto it_l=lhs.begin(), it_r=rhs.begin();
+					it_l!=lhs.end(); ++it_l, ++it_r){
+			if(it_l == it_r){
+				return true;
+			} else if(*it_l != *it_r){
+				return false;
+			}
+		}
+		return true;
+	}
+}
