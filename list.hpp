@@ -1,6 +1,7 @@
 #pragma once
 
 #include "list_detail.hpp"
+#include <ostream>
 
 namespace persist{
 	template<typename DataType>
@@ -22,7 +23,7 @@ namespace persist{
 
 			template<typename... Args>
 			inline list emplace(iterator_t it, Args&&... args) const;
-			inline list pop(iterator_t it) const;
+			inline list erase(iterator_t it) const;
 
 		private:
 			typename node_t::ptr_t first_;
@@ -41,6 +42,14 @@ namespace persist{
 
 	template<typename DataType>
 	bool operator==(const list<DataType>& lhs, const list<DataType>& rhs);
+
+	template<typename DataType>
+	bool operator!=(const list<DataType>& lhs, const list<DataType>& rhs){
+		return !(lhs == rhs);
+	}
+
+	template<typename DataType>
+	std::ostream& operator<<(std::ostream& stream, const list<DataType>& list);
 }
 
 # include "list.inc"

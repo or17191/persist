@@ -20,10 +20,10 @@ namespace persist{
 	}
 
 	template<typename DataType>
-	inline list<DataType> list<DataType>::pop(iterator_t it) const{
+	inline list<DataType> list<DataType>::erase(iterator_t it) const{
 		list ret{};
 		auto prev = ret.append_until(begin(), it);
-		ret.chain(next_from_prev(prev));
+		ret.chain(next_from_prev(prev)->next_);
 		return ret;
 	}
 
@@ -49,7 +49,7 @@ namespace persist{
 	template<typename DataType>
 	void list<DataType>::chain(typename node_t::ptr_t node){
 		std::swap(last_->next_, node);
-		for(auto p = last_; p; p = p->next_.get()){
+		for(auto p = last_->next_.get(); p; p = p->next_.get()){
 			last_ = p;
 			size_++;
 		}
@@ -76,5 +76,15 @@ namespace persist{
 			}
 		}
 		return true;
+	}
+
+	template<typename DataType>
+	std::ostream& operator<<(std::ostream& stream, const list<DataType>& list){
+		stream << '{';
+		for(const auto& e: list){
+			stream << e << ',' << ' ';
+		}
+		stream << '}';
+		return stream;
 	}
 }
