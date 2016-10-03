@@ -87,3 +87,32 @@ TEST(ListTest, ListTestErase){
 		ASSERT_EQ(my_list2.end(), it2);
 	}
 }
+
+TEST(ListTest, ListTestEnd){
+	std::list<int> reference_list = {1, 2, 3, 4, 5};
+	persist::list<int> my_list(reference_list.begin(), reference_list.end());
+	ASSERT_RANGES_EQ(reference_list,my_list);
+
+	reference_list.emplace_back(1);
+	auto my_list2 = my_list.emplace(my_list.end(), 1);
+	ASSERT_RANGES_EQ(reference_list,my_list2);
+
+	auto it = my_list2.begin();
+	std::advance(it, my_list2.size() - 1);
+
+	auto my_list3 = my_list2.erase(it);
+	ASSERT_EQ(my_list, my_list3);
+}
+
+TEST(ListTest, ListTestBegin){
+	std::list<int> reference_list = {1, 2, 3, 4, 5};
+	persist::list<int> my_list(reference_list.begin(), reference_list.end());
+	ASSERT_RANGES_EQ(reference_list,my_list);
+
+	reference_list.emplace_front(1);
+	auto my_list2 = my_list.emplace(my_list.begin(), 1);
+	ASSERT_RANGES_EQ(reference_list,my_list2);
+
+	auto my_list3 = my_list2.erase(my_list2.begin());
+	ASSERT_EQ(my_list, my_list3);
+}
