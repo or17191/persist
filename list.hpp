@@ -19,11 +19,20 @@ namespace persist{
 
 			auto end() const {return iterator_t{};}
 			auto begin() const {return iterator_t(first_.get());}
-			auto size() const{return size_;}
+			auto size() const {return size_;}
 
 			template<typename... Args>
 			inline list emplace(iterator_t it, Args&&... args) const;
 			inline list erase(iterator_t it) const;
+
+			template<typename... Args>
+			inline list emplace_front(Args&&... args) const{
+				return emplace(begin(), std::forward<Args>(args)...);
+			}
+
+			inline list erase_front() const{
+				return erase(begin());
+			}
 
 		private:
 			typename node_t::ptr_t first_;

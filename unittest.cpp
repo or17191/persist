@@ -126,11 +126,11 @@ TEST(ListTest, ListTestBegin){
 	ASSERT_RANGES_EQ(reference_list,my_list);
 
 	reference_list.emplace_front(1);
-	auto my_list2 = my_list.emplace(my_list.begin(), 1);
+	auto my_list2 = my_list.emplace_front(1);
 	ASSERT_RANGES_EQ(reference_list,my_list2);
 	CHECK_SIZE(my_list2);
 
-	auto my_list3 = my_list2.erase(my_list2.begin());
+	auto my_list3 = my_list2.erase_front();
 	ASSERT_EQ(my_list, my_list3);
 	CHECK_SIZE(my_list3);
 }
