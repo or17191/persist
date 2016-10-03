@@ -7,7 +7,7 @@ set(PROJECT_NAME presist)
 
 project(${PROJECT_NAME})
 
-set(CMAKE_CXX_FLAGS "-g -Wall -Wextra") 
+set(CMAKE_CXX_FLAGS "-g -Wall -Wextra -std=c++14") 
 
 if(test)
 	add_subdirectory("/usr/src/gtest" "${CMAKE_BINARY_DIR}/gtest")
