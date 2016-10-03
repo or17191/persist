@@ -35,7 +35,7 @@ namespace persist{
 			void append(Args&&... args);
 
 			iterator_t append_until(iterator_t first, const iterator_t& last);
-			void chain(typename node_t::ptr_t node);
+			void chain(const list& old, typename node_t::ptr_t node);
 
 			inline const auto& next_from_prev(const iterator_t& prev) const;
 	};

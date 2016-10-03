@@ -13,26 +13,38 @@
 	 	ASSERT_TRUE(std::equal(begin(c1), end(c1), begin(c2), end(c2))); \
 	} 
 
+#define CHECK_SIZE(c) \
+	{ \
+		using std::begin; using std::end; \
+		ASSERT_EQ(c.size(), std::distance(begin(c), end(c))); \
+	} 
+
 
 TEST(ListTest, ListTestCreation){
 	const persist::list<int> empty_list;
 	ASSERT_EQ(0, empty_list.size());
+	CHECK_SIZE(empty_list);
 	std::list<int> reference_list = {1, 2, 3, 4, 5};
 	persist::list<int> my_list(reference_list.begin(), reference_list.end());
 	ASSERT_EQ(reference_list.size(), my_list.size());
 	ASSERT_RANGES_EQ(reference_list,my_list);
+	CHECK_SIZE(reference_list);
+	CHECK_SIZE(my_list);
 	persist::list<int> my_list2 = {1, 2, 3, 4, 5};
 	ASSERT_RANGES_EQ(reference_list,my_list2);
 	ASSERT_EQ(my_list, my_list2);
+	CHECK_SIZE(my_list2);
 
 	auto my_list3 = my_list;
 	ASSERT_EQ(my_list, my_list3);
+	CHECK_SIZE(my_list3);
 }
 
 TEST(ListTest, ListTestEmplace){
 	std::list<int> reference_list = {1, 2, 3, 4, 5};
 	persist::list<int> my_list(reference_list.begin(), reference_list.end());
 	ASSERT_RANGES_EQ(reference_list,my_list);
+	CHECK_SIZE(my_list);
 	
 	{
 		auto it1 = reference_list.begin();
@@ -47,6 +59,7 @@ TEST(ListTest, ListTestEmplace){
 	}
 	ASSERT_RANGES_EQ(reference_list, my_list2);
 	ASSERT_NE(my_list, my_list2);
+	CHECK_SIZE(my_list2);
 	{
 		auto it1 = my_list.begin(), it2 = my_list2.begin();
 		ASSERT_NE(it1, it2);
@@ -76,6 +89,7 @@ TEST(ListTest, ListTestErase){
 		my_list2 = my_list.erase(it);
 	}
 	ASSERT_RANGES_EQ(reference_list, my_list2);
+	CHECK_SIZE(my_list2);
 	ASSERT_NE(my_list, my_list2);
 	{
 		auto it1 = my_list.begin(), it2 = my_list2.begin();
@@ -96,12 +110,14 @@ TEST(ListTest, ListTestEnd){
 	reference_list.emplace_back(1);
 	auto my_list2 = my_list.emplace(my_list.end(), 1);
 	ASSERT_RANGES_EQ(reference_list,my_list2);
+	CHECK_SIZE(my_list2);
 
 	auto it = my_list2.begin();
 	std::advance(it, my_list2.size() - 1);
 
 	auto my_list3 = my_list2.erase(it);
 	ASSERT_EQ(my_list, my_list3);
+	CHECK_SIZE(my_list3);
 }
 
 TEST(ListTest, ListTestBegin){
@@ -112,7 +128,9 @@ TEST(ListTest, ListTestBegin){
 	reference_list.emplace_front(1);
 	auto my_list2 = my_list.emplace(my_list.begin(), 1);
 	ASSERT_RANGES_EQ(reference_list,my_list2);
+	CHECK_SIZE(my_list2);
 
 	auto my_list3 = my_list2.erase(my_list2.begin());
 	ASSERT_EQ(my_list, my_list3);
+	CHECK_SIZE(my_list3);
 }

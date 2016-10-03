@@ -15,7 +15,8 @@ namespace persist{
 		list ret{};
 		auto prev = ret.append_until(begin(), it);
 		ret.append(std::forward<Args>(args)...);
-		ret.chain(next_from_prev(prev));
+		ret.chain(*this, next_from_prev(prev));
+		ret.size_ = this->size_ + 1;
 		return ret;
 	}
 
@@ -23,7 +24,8 @@ namespace persist{
 	inline list<DataType> list<DataType>::erase(iterator_t it) const{
 		list ret{};
 		auto prev = ret.append_until(begin(), it);
-		ret.chain(next_from_prev(prev)->next_);
+		ret.chain(*this, next_from_prev(prev)->next_);
+		ret.size_ = this->size_ - 1;
 		return ret;
 	}
 
@@ -47,12 +49,13 @@ namespace persist{
 	}
 
 	template<typename DataType>
-	void list<DataType>::chain(typename node_t::ptr_t node){
-		std::swap(last_->next_, node);
-		for(auto p = last_->next_.get(); p; p = p->next_.get()){
-			last_ = p;
-			size_++;
-		}
+	void list<DataType>::chain(const list<DataType>& old, typename node_t::ptr_t node){
+		if(last_){
+			std::swap(last_->next_, node);
+		} else{ // empty list
+			first_ = node;
+		}	
+		last_ = old.last_;
 	}
 
 	template<typename DataType>
