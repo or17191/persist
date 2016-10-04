@@ -19,13 +19,19 @@
 		ASSERT_EQ(c.size(), std::distance(begin(c), end(c))); \
 	} 
 
+class ListTest: public ::testing::Test{
+	public:
+		ListTest(): reference_list({1, 2, 3, 4, 5}),
+						my_list(reference_list.begin(), reference_list.end()){
+		}
+		std::list<int> reference_list;
+		persist::list<int> my_list;
+};
 
-TEST(ListTest, ListTestCreation){
+TEST_F(ListTest, ListTestCreation){
 	const persist::list<int> empty_list;
 	ASSERT_EQ(0, empty_list.size());
 	CHECK_SIZE(empty_list);
-	std::list<int> reference_list = {1, 2, 3, 4, 5};
-	persist::list<int> my_list(reference_list.begin(), reference_list.end());
 	ASSERT_EQ(reference_list.size(), my_list.size());
 	ASSERT_RANGES_EQ(reference_list,my_list);
 	CHECK_SIZE(reference_list);
@@ -40,11 +46,7 @@ TEST(ListTest, ListTestCreation){
 	CHECK_SIZE(my_list3);
 }
 
-TEST(ListTest, ListTestEmplace){
-	std::list<int> reference_list = {1, 2, 3, 4, 5};
-	persist::list<int> my_list(reference_list.begin(), reference_list.end());
-	ASSERT_RANGES_EQ(reference_list,my_list);
-	CHECK_SIZE(my_list);
+TEST_F(ListTest, ListTestEmplace){
 	
 	{
 		auto it1 = reference_list.begin();
@@ -72,11 +74,7 @@ TEST(ListTest, ListTestEmplace){
 	}
 }
 
-TEST(ListTest, ListTestErase){
-	std::list<int> reference_list = {1, 2, 3, 4, 5};
-	persist::list<int> my_list(reference_list.begin(), reference_list.end());
-	ASSERT_RANGES_EQ(reference_list,my_list);
-
+TEST_F(ListTest, ListTestErase){
 	{
 		auto it = reference_list.begin();
 		std::advance(it, 3);
@@ -102,11 +100,7 @@ TEST(ListTest, ListTestErase){
 	}
 }
 
-TEST(ListTest, ListTestEnd){
-	std::list<int> reference_list = {1, 2, 3, 4, 5};
-	persist::list<int> my_list(reference_list.begin(), reference_list.end());
-	ASSERT_RANGES_EQ(reference_list,my_list);
-
+TEST_F(ListTest, ListTestEnd){
 	reference_list.emplace_back(1);
 	auto my_list2 = my_list.emplace(my_list.end(), 1);
 	ASSERT_RANGES_EQ(reference_list,my_list2);
@@ -120,11 +114,7 @@ TEST(ListTest, ListTestEnd){
 	CHECK_SIZE(my_list3);
 }
 
-TEST(ListTest, ListTestBegin){
-	std::list<int> reference_list = {1, 2, 3, 4, 5};
-	persist::list<int> my_list(reference_list.begin(), reference_list.end());
-	ASSERT_RANGES_EQ(reference_list,my_list);
-
+TEST_F(ListTest, ListTestBegin){
 	reference_list.emplace_front(1);
 	auto my_list2 = my_list.emplace_front(1);
 	ASSERT_RANGES_EQ(reference_list,my_list2);
