@@ -12,7 +12,7 @@ namespace persist{
 			using value_t = typename node_t::value_t;
 			using iterator_t = detail::list_iterator<DataType>;
 			
-			list(): first_{nullptr}, last_{nullptr}, size_{}{}
+			list(): first_{nullptr}, size_{}{}
 			list(std::initializer_list<DataType> init): list(init.begin(), init.end()){}
 			template<typename InputIt>
 			list(InputIt first, const InputIt& last);
@@ -36,15 +36,14 @@ namespace persist{
 
 		private:
 			typename node_t::ptr_t first_;
-			node_t* last_;
 			size_t size_;
 
 
 			template<typename... Args>
-			void append(Args&&... args);
+			void append(iterator_t& pos, Args&&... args);
 
-			iterator_t append_until(iterator_t first, const iterator_t& last);
-			void chain(const list& old, typename node_t::ptr_t node);
+			iterator_t append_until(iterator_t& pos, iterator_t first, const iterator_t& last);
+			void chain(iterator_t& pos, typename node_t::ptr_t node);
 
 			inline const auto& next_from_prev(const iterator_t& prev) const;
 	};

@@ -4,8 +4,9 @@ namespace persist{
 	template<typename DataType>
 	template<typename InputIt>
 	list<DataType>::list(InputIt first, const InputIt& last): list<DataType>{}{
+		auto pos = end();
 		for(; first!=last; ++first){
-			append(*first);
+			append(pos, *first);
 		}
 	}
 
@@ -13,49 +14,50 @@ namespace persist{
 	template<typename... Args>
 	inline list<DataType> list<DataType>::emplace(iterator_t it, Args&&... args) const{
 		list ret{};
-		auto prev = ret.append_until(begin(), it);
-		ret.append(std::forward<Args>(args)...);
-		ret.chain(*this, next_from_prev(prev));
-		ret.size_ = this->size_ + 1;
+		auto pos = ret.end();
+		auto prev = ret.append_until(pos, begin(), it);
+		ret.append(pos, std::forward<Args>(args)...);
+		ret.chain(pos, next_from_prev(prev));
+		ret.size_ = size_ + 1;
 		return ret;
 	}
 
 	template<typename DataType>
 	inline list<DataType> list<DataType>::erase(iterator_t it) const{
 		list ret{};
-		auto prev = ret.append_until(begin(), it);
-		ret.chain(*this, next_from_prev(prev)->next_);
-		ret.size_ = this->size_ - 1;
+		auto pos = ret.end();
+		auto prev = ret.append_until(pos, begin(), it);
+		ret.chain(pos, next_from_prev(prev)->next_);
+		ret.size_ = size_ - 1;
 		return ret;
 	}
 
 	template<typename DataType>
 	template<typename... Args>
-	inline void list<DataType>::append(Args&&... args){
+	inline void list<DataType>::append(list<DataType>::iterator_t& pos, Args&&... args){
 		auto&& node = node_t::make_node(std::forward<Args>(args)...);
-		auto& new_last = (!last_) ? first_ : last_->next_;
+		auto& new_last = (pos.empty()) ? first_ : pos.node_->next_;
 		new_last = node;
-		last_ = new_last.get();
 		size_++;
+		pos = iterator_t{node.get()};
 	}
 
 	template<typename DataType>
-	typename list<DataType>::iterator_t list<DataType>::append_until(iterator_t first, const iterator_t& last){
+	typename list<DataType>::iterator_t list<DataType>::append_until(iterator_t& pos, iterator_t first, const iterator_t& last){
 		iterator_t prev;
 		for(; first!=last; prev=first++){
-			append(*first);
+			append(pos, *first);
 		}
 		return prev;
 	}
 
 	template<typename DataType>
-	void list<DataType>::chain(const list<DataType>& old, typename node_t::ptr_t node){
-		if(last_){
-			std::swap(last_->next_, node);
+	void list<DataType>::chain(iterator_t& pos, typename node_t::ptr_t node){
+		if(first_){
+			std::swap(pos.node_->next_, node);
 		} else{ // empty list
 			first_ = node;
 		}	
-		last_ = old.last_;
 	}
 
 	template<typename DataType>
