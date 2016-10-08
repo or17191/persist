@@ -67,10 +67,7 @@ TEST_F(ListTest, ListTestEmplace){
 		ASSERT_NE(it1, it2);
 		std::advance(it1, 3);
 		std::advance(it2, 4);
-		ASSERT_EQ(it1++, it2++);
-		ASSERT_EQ(it1++, it2++);
-		ASSERT_EQ(my_list.end(), it1);
-		ASSERT_EQ(my_list2.end(), it2);
+		ASSERT_EQ(it1, it2);
 	}
 }
 
@@ -94,9 +91,7 @@ TEST_F(ListTest, ListTestErase){
 		ASSERT_NE(it1, it2);
 		std::advance(it1, 4);
 		std::advance(it2, 3);
-		ASSERT_EQ(it1++, it2++);
-		ASSERT_EQ(my_list.end(), it1);
-		ASSERT_EQ(my_list2.end(), it2);
+		ASSERT_EQ(it1, it2);
 	}
 }
 
