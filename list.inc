@@ -3,7 +3,7 @@
 namespace persist{
 	template<typename DataType>
 	template<typename InputIt>
-	list<DataType>::list(InputIt first, const InputIt& last): list<DataType>{}{
+	list<DataType>::list(InputIt first, const InputIt& last): list{}{
 		auto pos = end();
 		for(; first!=last; ++first){
 			append(pos, *first);
@@ -34,7 +34,7 @@ namespace persist{
 
 	template<typename DataType>
 	template<typename... Args>
-	inline void list<DataType>::append(list<DataType>::iterator_t& pos, Args&&... args){
+	inline void list<DataType>::append(iterator_t& pos, Args&&... args){
 		auto&& node = node_t::make_node(std::forward<Args>(args)...);
 		auto& new_last = (pos.empty()) ? first_ : pos.node_->next_;
 		new_last = node;
@@ -61,7 +61,7 @@ namespace persist{
 	}
 
 	template<typename DataType>
-	inline const auto& list<DataType>::next_from_prev(const list<DataType>::iterator_t& prev) const{
+	inline const auto& list<DataType>::next_from_prev(const iterator_t& prev) const{
 		return (!prev.empty()) ?
 				prev.node_->next_ : // prev has a next
 				first_; // prev doesn't have a next
