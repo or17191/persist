@@ -47,7 +47,7 @@ namespace persist{
 			void chain(iterator_t& pos, typename node_t::ptr_t node);
 
 			inline const auto& next_from_prev(const iterator_t& prev) const;
-			friend class detail::list_builder<DataType>;
+			friend class detail::list_builder<list>;
 	};
 
 	template<typename DataType>

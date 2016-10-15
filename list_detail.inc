@@ -32,37 +32,37 @@ namespace persist{
 			return node_ == nullptr;
 		}
 
-		template<typename Node>
-		inline auto node_iterator<Node>::equal(const node_iterator& other) const{
+		template<typename NodePtr>
+		inline auto node_iterator<NodePtr>::equal(const node_iterator& other) const{
 			return node_ == other.node_;
 		}
 
-		template<typename Node>
+		template<typename NodePtr>
 		template<typename T>
-		inline node_iterator<Node>::operator list_iterator<T>() const{
+		inline node_iterator<NodePtr>::operator list_iterator<T>() const{
 			using list_iterator_t = list_iterator<T>;
 			return valid() ? list_iterator_t{(*node_).get()} : list_iterator_t{};
 		}
 
-		template<typename Node>
-		inline auto& node_iterator<Node>::dereference() const{
+		template<typename NodePtr>
+		inline auto& node_iterator<NodePtr>::dereference() const{
 			return *node_;
 		}
 
-		template<typename Node>
-		inline void node_iterator<Node>::increment(){
+		template<typename NodePtr>
+		inline void node_iterator<NodePtr>::increment(){
 			if(valid()){
 				node_ = std::addressof((*node_)->next_);
 			}
 		}
 
-		template<typename Node>
-		inline auto& node_iterator<Node>::value() const{
+		template<typename NodePtr>
+		inline auto& node_iterator<NodePtr>::value() const{
 			return (*node_)->data_;
 		}
 
-		template<typename Node>
-		inline auto node_iterator<Node>::valid() const{
+		template<typename NodePtr>
+		inline auto node_iterator<NodePtr>::valid() const{
 			return node_ != nullptr && (*node_) != nullptr;
 		}
 
@@ -75,7 +75,7 @@ namespace persist{
 
 		template<typename List>
 		list_builder<List>::list_builder():
-				src_cur_node_{nullptr},
+				src_cur_node_{},
 				dst_{},
 				dst_tail_{dst_.first_},
 				dst_size_{0}{}
@@ -98,16 +98,16 @@ namespace persist{
 		template<typename List>
 		template<typename... Args>
 		inline list_builder<List>& list_builder<List>::append(Args&&... args){
-			auto&& node_p = make_node<node_t>(std::forward<Args>(args)...);
-			*dst_tail_ = node;
+			decltype(auto) node_p = make_node<node_t>(std::forward<Args>(args)...);
+			*dst_tail_ = node_p;
 			++dst_tail_;
 			dst_size_++;
 			return *this;
 		}
 
 		template<typename List>
-		inline list_t&& list_builder<List>::finalize(){
-			*dst_tail = *src_cur_node_;
+		inline typename list_builder<List>::list_t&& list_builder<List>::finalize(){
+			*dst_tail_ = *src_cur_node_;
 			dst_.size_ = dst_size_;
 			return std::move(dst_);
 		}

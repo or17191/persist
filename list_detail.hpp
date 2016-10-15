@@ -29,9 +29,9 @@ namespace persist{
 																			boost::forward_traversal_tag>{
 			private:
 				using node_t = list_node<DataType>;
+			public:
 				explicit list_iterator(node_t* node): node_(node){}
 				list_iterator(): node_(nullptr){}
-			public:
 				inline auto equal(const list_iterator& other) const;
 				inline const auto& dereference() const;
 				inline void increment();
@@ -44,16 +44,16 @@ namespace persist{
 		};
 
 
-		template<typename Node>
+		template<typename NodePtr>
 		class node_iterator:
-				public boost::iterator_facade<node_iterator<Node>,
-																			typename Node::ptr_t,
+				public boost::iterator_facade<node_iterator<NodePtr>,
+																			NodePtr,
 																			boost::forward_traversal_tag>{
 			private:
-				using node_t = typename Node::ptr_t;
-				explicit node_iterator(node_t& node): node_(std::addressof(node)){}
-				node_iterator(): node_(nullptr){}
+				using node_ptr_t = NodePtr;
 			public:
+				explicit node_iterator(node_ptr_t& node): node_(std::addressof(node)){}
+				node_iterator(): node_(nullptr){}
 				inline auto equal(const node_iterator& other) const;
 				inline auto& dereference() const;
 				inline void increment();
@@ -63,7 +63,7 @@ namespace persist{
 				inline operator list_iterator<T>() const;
 
 			private:
-				node_t* node_;
+				node_ptr_t* node_;
 
 				inline auto valid() const;
 		};
@@ -83,11 +83,13 @@ namespace persist{
 			private:
 				using node_t = typename list_t::node_t;
 				using node_ptr_t = typename node_t::ptr_t;
-				using node_iterator_t = node_iterator<node_t>;
-				node_iterator_t src_cur_node_;
+				template<typename T>
+				using node_iterator_t=node_iterator<T>;
+				node_iterator_t<const node_ptr_t> src_cur_node_;
 				list_t dst_;
-				node_iterator_t dst_tail_;
-				decltype(dst_.size_) dst_size_;
+				node_iterator_t<node_ptr_t> dst_tail_;
+				//decltype(dst_.size_) dst_size_;
+				size_t dst_size_;
 		};
 	}
 }

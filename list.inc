@@ -15,7 +15,7 @@ namespace persist{
 	template<typename... Args>
 	inline list<DataType> list<DataType>::emplace(iterator_t it, Args&&... args) const{
 		builder_t builder{*this};
-		builder.append(std::forward<Args>(args)...);
+		builder.fast_forward(it).append(std::forward<Args>(args)...);
 		return list{builder.finalize()};
 	}
 
