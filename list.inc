@@ -14,15 +14,18 @@ namespace persist{
 	template<typename DataType>
 	template<typename... Args>
 	inline list<DataType> list<DataType>::emplace(iterator_t it, Args&&... args) const{
-		builder_t builder{*this};
-		builder.fast_forward(it).emplace_back(std::forward<Args>(args)...);
-		return list{builder.finalize()};
+		return list{builder_t{*this}.
+								fast_forward(it).
+								emplace_back(std::forward<Args>(args)...).
+								finalize()};
 	}
 
 	template<typename DataType>
 	inline list<DataType> list<DataType>::erase(iterator_t it) const{
-		builder_t builder(*this);
-		return list{builder.fast_forward(it).skip().finalize()};
+		return list{builder_t{*this}.
+								fast_forward(it).
+								skip().
+								finalize()};
 	}
 
 
