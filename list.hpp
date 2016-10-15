@@ -1,6 +1,6 @@
 #pragma once
 
-#include "list_detail.hpp"
+#include "detail/list_detail.hpp"
 #include <ostream>
 
 namespace persist{
