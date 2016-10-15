@@ -1,17 +1,19 @@
 #pragma once
 
-#include "detail/list_detail.hpp"
+#include "detail/list/list_detail.hpp"
+#include "detail/list/node.hpp"
+#include "detail/list/iterators.hpp"
 #include <ostream>
 
 namespace persist{
 	template<typename DataType>
 	class list{
 		private:
-			using node_t = detail::list_node<DataType>;
-			using builder_t = detail::list_builder<list>;
+			using builder_t = detail::list::list_builder<list>;
+			using node_t = detail::list::list_node<DataType>;
 		public:
 			using value_t = typename node_t::value_t;
-			using iterator_t = detail::list_iterator<DataType>;
+			using iterator_t = detail::list::list_iterator<node_t>;
 			
 			list(): first_{nullptr}, size_{}{}
 			list(std::initializer_list<DataType> init): list(init.begin(), init.end()){}
@@ -47,7 +49,7 @@ namespace persist{
 			void chain(iterator_t& pos, typename node_t::ptr_t node);
 
 			inline const auto& next_from_prev(const iterator_t& prev) const;
-			friend class detail::list_builder<list>;
+			friend class detail::list::list_builder<list>;
 	};
 
 	template<typename DataType>
