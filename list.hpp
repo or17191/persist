@@ -8,6 +8,7 @@ namespace persist{
 	class list{
 		private:
 			using node_t = detail::list_node<DataType>;
+			using builder_t = detail::list_builder<list>;
 		public:
 			using value_t = typename node_t::value_t;
 			using iterator_t = detail::list_iterator<DataType>;
@@ -46,6 +47,7 @@ namespace persist{
 			void chain(iterator_t& pos, typename node_t::ptr_t node);
 
 			inline const auto& next_from_prev(const iterator_t& prev) const;
+			friend class detail::list_builder<DataType>;
 	};
 
 	template<typename DataType>

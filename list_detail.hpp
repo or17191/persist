@@ -6,6 +6,7 @@
 
 namespace persist{
 	template<typename DataType> class list;
+	template<typename DataType> class list_builder;
 	namespace detail{
 		template<typename DataType>
 		struct list_node{
@@ -16,12 +17,10 @@ namespace persist{
 			
 			list_node(const DataType& d): data_{d}, next_{nullptr}{};
 			list_node(DataType&& d): data_{d}, next_{nullptr}{};
-			template<typename... Args>
-			inline static decltype(auto) make_node(Args&&... args){
-				return std::make_shared<list_node>(
-					DataType(std::forward<Args>(args)...));
-			}
 		};
+
+		template<typename Node, typename... Args>
+		decltype(auto) make_node(Args&&... args);
 
 		template<typename DataType>
 		class list_iterator:
@@ -33,23 +32,64 @@ namespace persist{
 				explicit list_iterator(node_t* node): node_(node){}
 				list_iterator(): node_(nullptr){}
 			public:
-				auto equal(const list_iterator& other) const{
-					return node_ == other.node_;
-				}
-				const auto& dereference() const{
-					return node_->data_;
-				}
-
-				void increment(){
-					if(node_){
-						node_ = node_->next_.get();
-					}
-				}
+				inline auto equal(const list_iterator& other) const;
+				inline const auto& dereference() const;
+				inline void increment();
 
 				friend class list<DataType>;
+				friend class list_builder<DataType>;
 			private:
 				node_t* node_;
-				bool empty() const {return node_ == nullptr;}
+				inline bool empty() const;
+		};
+
+
+		template<typename Node>
+		class node_iterator:
+				public boost::iterator_facade<node_iterator<Node>,
+																			typename Node::ptr_t,
+																			boost::forward_traversal_tag>{
+			private:
+				using node_t = typename Node::ptr_t;
+				explicit node_iterator(node_t& node): node_(std::addressof(node)){}
+				node_iterator(): node_(nullptr){}
+			public:
+				inline auto equal(const node_iterator& other) const;
+				inline auto& dereference() const;
+				inline void increment();
+				inline auto& value() const;
+
+				template<typename T>
+				inline operator list_iterator<T>() const;
+
+			private:
+				node_t* node_;
+
+				inline auto valid() const;
+		};
+
+		template<typename List>
+		class list_builder{
+			public:
+				using list_t = List;
+				using value_iterator_t = typename list_t::iterator_t;
+				list_builder(const list_t& src);
+				list_builder();
+				list_builder& fast_forward(value_iterator_t pos);
+				inline list_builder& skip();
+				template<typename... Args>
+				inline list_builder& append(Args&&... args);
+				inline list_t&& finalize();
+			private:
+				using node_t = typename list_t::node_t;
+				using node_ptr_t = typename node_t::ptr_t;
+				using node_iterator_t = node_iterator<node_t>;
+				node_iterator_t src_cur_node_;
+				list_t dst_;
+				node_iterator_t dst_tail_;
+				decltype(dst_.size_) dst_size_;
 		};
 	}
 }
+
+#include "list_detail.inc"
