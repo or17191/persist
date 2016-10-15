@@ -6,7 +6,7 @@ namespace persist{
 	list<DataType>::list(InputIt first, const InputIt& last): list{}{
 		builder_t builder;
 		for(; first!=last; ++first){
-			builder.append(*first);
+			builder.emplace_back(*first);
 		}
 		(*this) = builder.finalize();
 	}
@@ -15,7 +15,7 @@ namespace persist{
 	template<typename... Args>
 	inline list<DataType> list<DataType>::emplace(iterator_t it, Args&&... args) const{
 		builder_t builder{*this};
-		builder.fast_forward(it).append(std::forward<Args>(args)...);
+		builder.fast_forward(it).emplace_back(std::forward<Args>(args)...);
 		return list{builder.finalize()};
 	}
 

@@ -62,7 +62,7 @@ namespace persist{
 		}
 
 		template<typename NodePtr>
-		inline auto node_iterator<NodePtr>::valid() const{
+		inline bool node_iterator<NodePtr>::valid() const{
 			return node_ != nullptr && (*node_) != nullptr;
 		}
 
@@ -95,21 +95,31 @@ namespace persist{
 			return *this;
 		}
 
+
 		template<typename List>
 		template<typename... Args>
-		inline list_builder<List>& list_builder<List>::append(Args&&... args){
-			decltype(auto) node_p = make_node<node_t>(std::forward<Args>(args)...);
-			*dst_tail_ = node_p;
-			++dst_tail_;
+		inline list_builder<List>& list_builder<List>::emplace_back(Args&&... args){
+			append(std::forward<Args>(args)...);
 			dst_size_++;
 			return *this;
 		}
 
 		template<typename List>
 		inline typename list_builder<List>::list_t&& list_builder<List>::finalize(){
-			*dst_tail_ = *src_cur_node_;
+			if(src_cur_node_.valid()){
+				*dst_tail_ = *src_cur_node_;
+			}	
 			dst_.size_ = dst_size_;
 			return std::move(dst_);
+		}
+
+		template<typename List>
+		template<typename... Args>
+		inline list_builder<List>& list_builder<List>::append(Args&&... args){
+			decltype(auto) node_p = make_node<node_t>(std::forward<Args>(args)...);
+			*dst_tail_ = node_p;
+			++dst_tail_;
+			return *this;
 		}
 
 	}

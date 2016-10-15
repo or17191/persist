@@ -58,6 +58,7 @@ namespace persist{
 				inline auto& dereference() const;
 				inline void increment();
 				inline auto& value() const;
+				inline bool valid() const;
 
 				template<typename T>
 				inline operator list_iterator<T>() const;
@@ -65,7 +66,6 @@ namespace persist{
 			private:
 				node_ptr_t* node_;
 
-				inline auto valid() const;
 		};
 
 		template<typename List>
@@ -78,7 +78,7 @@ namespace persist{
 				list_builder& fast_forward(value_iterator_t pos);
 				inline list_builder& skip();
 				template<typename... Args>
-				inline list_builder& append(Args&&... args);
+				inline list_builder& emplace_back(Args&&... args);
 				inline list_t&& finalize();
 			private:
 				using node_t = typename list_t::node_t;
@@ -90,6 +90,9 @@ namespace persist{
 				node_iterator_t<node_ptr_t> dst_tail_;
 				//decltype(dst_.size_) dst_size_;
 				size_t dst_size_;
+
+				template<typename... Args>
+				inline list_builder& append(Args&&... args);
 		};
 	}
 }

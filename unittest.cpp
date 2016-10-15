@@ -21,22 +21,24 @@
 
 class ListTest: public ::testing::Test{
 	public:
+		using list_t = persist::list<int>;
+		using const_list_t = const list_t;
 		ListTest(): reference_list({1, 2, 3, 4, 5}),
 						my_list(reference_list.begin(), reference_list.end()){
 		}
 		std::list<int> reference_list;
-		persist::list<int> my_list;
+		const_list_t my_list;
 };
 
 TEST_F(ListTest, ListTestCreation){
-	const persist::list<int> empty_list;
+	const_list_t empty_list;
 	ASSERT_EQ(0, empty_list.size());
 	CHECK_SIZE(empty_list);
 	ASSERT_EQ(reference_list.size(), my_list.size());
 	ASSERT_RANGES_EQ(reference_list,my_list);
 	CHECK_SIZE(reference_list);
 	CHECK_SIZE(my_list);
-	persist::list<int> my_list2 = {1, 2, 3, 4, 5};
+	const_list_t my_list2 = {1, 2, 3, 4, 5};
 	ASSERT_RANGES_EQ(reference_list,my_list2);
 	ASSERT_EQ(my_list, my_list2);
 	CHECK_SIZE(my_list2);
@@ -53,7 +55,7 @@ TEST_F(ListTest, ListTestEmplace){
 		std::advance(it1, 3);
 		reference_list.emplace(it1, 6);
 	}
-	decltype(my_list) my_list2;
+	list_t my_list2;
 	{
 		auto it = my_list.begin();
 		std::advance(it, 3);
@@ -77,7 +79,7 @@ TEST_F(ListTest, ListTestErase){
 		std::advance(it, 3);
 		reference_list.erase(it);
 	}
-	decltype(my_list) my_list2;
+	list_t my_list2;
 	{
 		auto it = my_list.begin();
 		std::advance(it, 3);
