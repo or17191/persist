@@ -10,7 +10,7 @@ project(${PROJECT_NAME})
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++14") 
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g")
 
 if(test)
 	add_subdirectory("/usr/src/gtest" "${CMAKE_BINARY_DIR}/gtest")
