@@ -37,7 +37,7 @@ namespace persist{
 
 		private:
 			typename node_t::ptr_t first_;
-			size_t size_;
+			decltype(std::declval<builder_t>().dst_size_) size_;
 
 			list(builder_t&& builder): first_{std::move(builder.dst_)}, size_{builder.dst_size_}{}
 

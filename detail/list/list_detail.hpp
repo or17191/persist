@@ -26,7 +26,6 @@ namespace list{
 		node_iterator<const node_ptr_t> src_cur_node_;
 		node_ptr_t dst_;
 		node_iterator<node_ptr_t> dst_tail_;
-		//decltype(dst_.size_) dst_size_;
 		size_t dst_size_;
 
 		template<typename... Args>
