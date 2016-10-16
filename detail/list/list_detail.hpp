@@ -35,12 +35,12 @@ namespace list{
 	};
 
 	template<typename List, typename DataType, typename InputIt>
-	decltype(auto) build_from_sequence(InputIt first, const InputIt& last){
+	auto build_from_sequence(InputIt first, const InputIt& last){
 		builder<List, DataType> b;
 		for(; first!=last; ++first){
 			b.emplace_back(*first);
 		}
-		return b.finalize();
+		return b;
 	}
 }
 }

@@ -41,7 +41,7 @@ namespace persist{
 
 			list(builder_t&& builder): first_{std::move(builder.dst_)}, size_{builder.dst_size_}{}
 
-			decltype(auto) make_builder() const{
+			auto make_builder() const{
 				return builder_t{first_, size_};
 			}
 

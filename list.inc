@@ -4,7 +4,7 @@ namespace persist{
 	template<typename DataType>
 	template<typename InputIt>
 	list<DataType>::list(InputIt first, const InputIt& last):
-		list{detail::list::build_from_sequence<list, DataType>(first, last)}{}
+		list{detail::list::build_from_sequence<list, DataType, InputIt>(first, last).finalize()}{}
 
 	template<typename DataType>
 	template<typename... Args>
