@@ -3,18 +3,13 @@
 namespace persist{
 	template<typename DataType>
 	template<typename InputIt>
-	list<DataType>::list(InputIt first, const InputIt& last): list{}{
-		builder_t builder;
-		for(; first!=last; ++first){
-			builder.emplace_back(*first);
-		}
-		(*this) = builder.finalize();
-	}
+	list<DataType>::list(InputIt first, const InputIt& last):
+		list{detail::list::build_from_sequence<list, DataType>(first, last)}{}
 
 	template<typename DataType>
 	template<typename... Args>
 	inline list<DataType> list<DataType>::emplace(iterator_t it, Args&&... args) const{
-		return list{builder_t{*this}.
+		return list{make_builder().
 								fast_forward(it).
 								emplace_back(std::forward<Args>(args)...).
 								finalize()};
@@ -22,7 +17,7 @@ namespace persist{
 
 	template<typename DataType>
 	inline list<DataType> list<DataType>::erase(iterator_t it) const{
-		return list{builder_t{*this}.
+		return list{make_builder().
 								fast_forward(it).
 								skip().
 								finalize()};

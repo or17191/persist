@@ -1,19 +1,17 @@
 #pragma once
 
 #include "detail/list/list_detail.hpp"
-#include "detail/list/node.hpp"
-#include "detail/list/iterators.hpp"
 #include <ostream>
 
 namespace persist{
 	template<typename DataType>
 	class list{
 		private:
-			using builder_t = detail::list::list_builder<list>;
-			using node_t = detail::list::list_node<DataType>;
+			using builder_t = detail::list::builder<list, DataType>;
+			using node_t = typename builder_t::node_t;
 		public:
-			using value_t = typename node_t::value_t;
-			using iterator_t = detail::list::list_iterator<node_t>;
+			using value_t = typename builder_t::value_t;
+			using iterator_t = typename builder_t::iterator_t;
 			
 			list(): first_{nullptr}, size_{}{}
 			list(std::initializer_list<DataType> init): list(init.begin(), init.end()){}
@@ -41,15 +39,12 @@ namespace persist{
 			typename node_t::ptr_t first_;
 			size_t size_;
 
+			list(builder_t&& builder): first_{std::move(builder.dst_)}, size_{builder.dst_size_}{}
 
-			template<typename... Args>
-			void append(iterator_t& pos, Args&&... args);
+			decltype(auto) make_builder() const{
+				return builder_t{first_, size_};
+			}
 
-			iterator_t append_until(iterator_t& pos, iterator_t first, const iterator_t& last);
-			void chain(iterator_t& pos, typename node_t::ptr_t node);
-
-			inline const auto& next_from_prev(const iterator_t& prev) const;
-			friend class detail::list::list_builder<list>;
 	};
 
 	template<typename DataType>
