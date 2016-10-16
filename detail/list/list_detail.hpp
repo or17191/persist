@@ -7,9 +7,8 @@ namespace persist{
 template<typename DataType> class list;
 namespace detail{
 namespace list{
-	template<typename List, typename DataType>
+	template<typename DataType>
 	struct builder{
-		using list_t = List;
 		using node_t = node<DataType>;
 		using node_ptr_t = typename node_t::ptr_t;
 		using value_t = typename node_t::value_t;
@@ -34,9 +33,9 @@ namespace list{
 		inline builder& append(Args&&... args);
 	};
 
-	template<typename List, typename DataType, typename InputIt>
+	template<typename DataType, typename InputIt>
 	auto build_from_sequence(InputIt first, const InputIt& last){
-		builder<List, DataType> b;
+		builder<DataType> b;
 		for(; first!=last; ++first){
 			b.emplace_back(*first);
 		}

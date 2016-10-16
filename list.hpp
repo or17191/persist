@@ -7,7 +7,7 @@ namespace persist{
 	template<typename DataType>
 	class list{
 		private:
-			using builder_t = detail::list::builder<list, DataType>;
+			using builder_t = detail::list::builder<DataType>;
 			using node_t = typename builder_t::node_t;
 		public:
 			using value_t = typename builder_t::value_t;
