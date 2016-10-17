@@ -19,6 +19,15 @@ namespace list{
 				dst_size_{0}{}
 
 		template<typename DataType>
+		template<typename InputIt>
+		builder<DataType>::builder(InputIt first, const InputIt& last):
+				builder{}{
+			for(; first!=last; ++first){
+				emplace_back(*first);
+			}
+		}
+
+		template<typename DataType>
 		builder<DataType>& builder<DataType>::fast_forward(iterator_t pos){
 			for(; src_cur_node_!=pos; ++src_cur_node_){
 				append(src_cur_node_.value());

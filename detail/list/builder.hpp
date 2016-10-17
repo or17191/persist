@@ -17,6 +17,9 @@ namespace list{
 		builder(const node_ptr_t& first, size_t size);
 		builder();
 
+		template<typename InputIt>
+		builder(InputIt first, const InputIt& last);
+
 		builder& fast_forward(iterator_t pos);
 		inline builder& skip();
 		template<typename... Args>
@@ -32,14 +35,6 @@ namespace list{
 		inline builder& append(Args&&... args);
 	};
 
-	template<typename DataType, typename InputIt>
-	auto build_from_sequence(InputIt first, const InputIt& last){
-		builder<DataType> b;
-		for(; first!=last; ++first){
-			b.emplace_back(*first);
-		}
-		return b;
-	}
 }
 }
 }
