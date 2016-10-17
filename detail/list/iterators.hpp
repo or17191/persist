@@ -14,13 +14,13 @@ namespace list{
 				using node_t = Node;
 			public:
 				explicit list_iterator(node_t* node): node_(node){}
-				list_iterator(): node_(nullptr){}
+				list_iterator(){}
 				inline auto equal(const list_iterator& other) const;
 				inline const auto& dereference() const;
 				inline void increment();
 
 			private:
-				node_t* node_;
+				node_t* node_ = nullptr;
 		};
 
 		template<typename NodePtr>
@@ -30,20 +30,20 @@ namespace list{
 																			boost::forward_traversal_tag>{
 			private:
 				using node_ptr_t = NodePtr;
+				using node_t = typename node_ptr_t::element_type;
 			public:
 				explicit node_iterator(node_ptr_t& node): node_(std::addressof(node)){}
-				node_iterator(): node_(nullptr){}
+				node_iterator(){}
 				inline auto equal(const node_iterator& other) const;
 				inline auto& dereference() const;
 				inline void increment();
 				inline auto& value() const;
 				inline bool valid() const;
 
-				template<typename T>
-				inline operator list_iterator<T>() const;
+				inline operator list_iterator<node_t>() const;
 
 			private:
-				node_ptr_t* node_;
+				node_ptr_t* node_ = nullptr;
 
 		};
 

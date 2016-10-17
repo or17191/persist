@@ -25,10 +25,10 @@ namespace list{
 	}
 
 	template<typename NodePtr>
-	template<typename T>
-	inline node_iterator<NodePtr>::operator list_iterator<T>() const{
-		using list_iterator_t = list_iterator<T>;
-		return valid() ? list_iterator_t{(*node_).get()} : list_iterator_t{};
+	inline node_iterator<NodePtr>::operator
+			list_iterator<node_t>() const{
+		using list_iterator_t = list_iterator<node_t>;
+		return valid() ? list_iterator_t{node_->get()} : list_iterator_t{};
 	}
 
 	template<typename NodePtr>
