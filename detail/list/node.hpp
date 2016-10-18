@@ -18,7 +18,7 @@ namespace list{
 		node(DataType&& d): data_{d}{};
 
 		template<typename... Args>
-		inline static decltype(auto) make_node(Args&&... args){
+		inline static decltype(auto) make(Args&&... args){
 			return std::make_shared<node>(
 				value_t(std::forward<Args>(args)...));
 		}
