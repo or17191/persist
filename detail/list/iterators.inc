@@ -9,7 +9,7 @@ namespace list{
 
 	template<typename Node>
 	inline const auto& list_iterator<Node>::dereference() const{
-		return node_->data_;
+		return static_cast<Node*>(node_)->data_;
 	}
 
 	template<typename Node>
@@ -25,9 +25,10 @@ namespace list{
 	}
 
 	template<typename NodePtr>
+	template<typename OtherNode>
 	inline node_iterator<NodePtr>::operator
-			list_iterator<node_t>() const{
-		using list_iterator_t = list_iterator<node_t>;
+			list_iterator<OtherNode>() const{
+		using list_iterator_t = list_iterator<OtherNode>;
 		return valid() ? list_iterator_t{node_->get()} : list_iterator_t{};
 	}
 
@@ -41,11 +42,6 @@ namespace list{
 		if(valid()){
 			node_ = std::addressof((*node_)->next_);
 		}
-	}
-
-	template<typename NodePtr>
-	inline auto& node_iterator<NodePtr>::value() const{
-		return (*node_)->data_;
 	}
 
 	template<typename NodePtr>

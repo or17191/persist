@@ -43,7 +43,8 @@ namespace list{
 		template<typename DataType>
 		auto& builder<DataType>::coupled_builder_imp::fast_forward(iterator_t pos){
 			for(; src_cur_node_!=pos; ++src_cur_node_){
-				this->append(src_cur_node_.value());
+				auto p = static_cast<node_t const *>(src_cur_node_->get());
+				this->append(p->data_);
 			}
 			return *this;
 		}
