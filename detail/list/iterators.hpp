@@ -6,23 +6,30 @@
 namespace persist{
 namespace detail{
 namespace list{
+	class list_iterator_base{
+		public:
+			explicit list_iterator_base(node_base* node): node_(node){}
+			list_iterator_base(){}
+			inline auto equal(const list_iterator_base& other) const;
+			inline void increment();
+
+		protected:
+			node_base* node_ = nullptr;
+
+	};
 
 	template<typename Node>
 	class list_iterator:
+			public list_iterator_base,
 			public boost::iterator_facade<list_iterator<Node>,
 																		typename Node::value_t,
 																		boost::forward_traversal_tag>{
 		private:
 			using node_t = Node;
 		public:
-			explicit list_iterator(node_base* node): node_(node){}
-			list_iterator(){}
-			inline auto equal(const list_iterator& other) const;
+			using list_iterator_base::list_iterator_base;
 			inline const auto& dereference() const;
-			inline void increment();
-
-		private:
-			node_base* node_ = nullptr;
+			inline auto equal(const list_iterator& other) const;
 	};
 
 	template<typename NodePtr>

@@ -2,8 +2,7 @@
 namespace persist{
 namespace detail{
 namespace list{
-	template<typename Node>
-	inline auto list_iterator<Node>::equal(const list_iterator& other) const{
+	inline auto list_iterator_base::equal(const list_iterator_base& other) const{
 		return node_ == other.node_;
 	}
 
@@ -12,11 +11,15 @@ namespace list{
 		return static_cast<Node*>(node_)->data_;
 	}
 
-	template<typename Node>
-	inline void list_iterator<Node>::increment(){
+	inline void list_iterator_base::increment(){
 		if(node_){
 			node_ = node_->next_.get();
 		}
+	}
+
+	template<typename Node>
+	inline auto list_iterator<Node>::equal(const list_iterator& other) const{
+		return static_cast<list_iterator_base const &>(*this).equal(static_cast<list_iterator_base const &>(other));
 	}
 
 	template<typename NodePtr>
