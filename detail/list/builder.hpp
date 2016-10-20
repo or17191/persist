@@ -32,7 +32,7 @@ namespace list{
 		inline auto&& finalize();
 		
 		node_ptr_t dst_;
-		node_iterator<node_ptr_t> dst_tail_;
+		node_iterator dst_tail_;
 		size_t dst_size_;
 
 		protected:
@@ -50,7 +50,7 @@ namespace list{
 		inline auto& emplace_back(Args&&... args);
 		inline auto&& finalize();
 
-		node_iterator<const node_ptr_t> src_cur_node_;
+		const_node_iterator src_cur_node_;
 	};
 }
 }

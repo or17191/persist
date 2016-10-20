@@ -20,32 +20,32 @@ namespace list{
 	}
 
 	template<typename NodePtr>
-	inline auto node_iterator<NodePtr>::equal(const node_iterator& other) const{
+	inline auto node_iterator_impl<NodePtr>::equal(const node_iterator_impl& other) const{
 		return node_ == other.node_;
 	}
 
 	template<typename NodePtr>
 	template<typename OtherNode>
-	inline node_iterator<NodePtr>::operator
+	inline node_iterator_impl<NodePtr>::operator
 			list_iterator<OtherNode>() const{
 		using list_iterator_t = list_iterator<OtherNode>;
 		return valid() ? list_iterator_t{node_->get()} : list_iterator_t{};
 	}
 
 	template<typename NodePtr>
-	inline auto& node_iterator<NodePtr>::dereference() const{
+	inline auto& node_iterator_impl<NodePtr>::dereference() const{
 		return *node_;
 	}
 
 	template<typename NodePtr>
-	inline void node_iterator<NodePtr>::increment(){
+	inline void node_iterator_impl<NodePtr>::increment(){
 		if(valid()){
 			node_ = std::addressof((*node_)->next_);
 		}
 	}
 
 	template<typename NodePtr>
-	inline bool node_iterator<NodePtr>::valid() const{
+	inline bool node_iterator_impl<NodePtr>::valid() const{
 		return node_ != nullptr && (*node_) != nullptr;
 	}
 }

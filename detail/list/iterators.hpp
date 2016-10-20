@@ -1,11 +1,11 @@
 #pragma once
 
+#include "node.hpp"
 #include <boost/iterator/iterator_facade.hpp>
 
 namespace persist{
 namespace detail{
 namespace list{
-	class node_base;
 
 	template<typename Node>
 	class list_iterator:
@@ -26,17 +26,17 @@ namespace list{
 	};
 
 	template<typename NodePtr>
-	class node_iterator:
-			public boost::iterator_facade<node_iterator<NodePtr>,
+	class node_iterator_impl:
+			public boost::iterator_facade<node_iterator_impl<NodePtr>,
 																		NodePtr,
 																		boost::forward_traversal_tag>{
 		private:
 			using node_ptr_t = NodePtr;
 			using node_t = typename node_ptr_t::element_type;
 		public:
-			explicit node_iterator(node_ptr_t& node): node_(std::addressof(node)){}
-			node_iterator(){}
-			inline auto equal(const node_iterator& other) const;
+			explicit node_iterator_impl(node_ptr_t& node): node_(std::addressof(node)){}
+			node_iterator_impl(){}
+			inline auto equal(const node_iterator_impl& other) const;
 			inline auto& dereference() const;
 			inline void increment();
 			inline bool valid() const;
@@ -48,6 +48,9 @@ namespace list{
 			node_ptr_t* node_ = nullptr;
 
 	};
+
+	using node_iterator = node_iterator_impl<node_base::ptr_t>;
+	using const_node_iterator = node_iterator_impl<const node_base::ptr_t>;
 
 }
 }
