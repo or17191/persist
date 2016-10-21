@@ -6,16 +6,29 @@
 namespace persist{
 namespace detail{
 namespace list{
+	template<typename NodePtr>
+	class node_iterator_impl;
+
+	class list_iterator_base;
+
+	template<typename NodePtr>
+	bool inline operator==(const node_iterator_impl<NodePtr>& lhs, const list_iterator_base& rhs);
+
 	class list_iterator_base{
 		public:
-			explicit list_iterator_base(node_base* node): node_(node){}
-			list_iterator_base(){}
+			explicit inline list_iterator_base(node_base* node): node_(node){}
+			inline list_iterator_base(){}
 			inline auto equal(const list_iterator_base& other) const;
 			inline void increment();
+
+			template<typename NodePtr>
+			friend bool operator==(const node_iterator_impl<NodePtr>& lhs, const list_iterator_base& rhs);
 
 		protected:
 			node_base* node_ = nullptr;
 
+		private:
+			inline operator node_base const * () const{return node_;}
 	};
 
 	template<typename Node>
@@ -39,25 +52,28 @@ namespace list{
 																		boost::forward_traversal_tag>{
 		private:
 			using node_ptr_t = NodePtr;
-			using node_t = typename node_ptr_t::element_type;
 		public:
 			explicit node_iterator_impl(node_ptr_t& node): node_(std::addressof(node)){}
-			node_iterator_impl(){}
+			inline node_iterator_impl(){}
 			inline auto equal(const node_iterator_impl& other) const;
 			inline auto& dereference() const;
 			inline void increment();
 			inline bool valid() const;
 
-			template<typename OtherNode>
-			inline operator list_iterator<OtherNode>() const;
+			friend bool operator==<>(const node_iterator_impl& lhs, const list_iterator_base& rhs);
 
 		private:
 			node_ptr_t* node_ = nullptr;
+
+			operator node_base const * () const{return valid() ? node_->get(): nullptr;}
 
 	};
 
 	using node_iterator = node_iterator_impl<node_base::ptr_t>;
 	using const_node_iterator = node_iterator_impl<const node_base::ptr_t>;
+
+	template<typename NodePtr>
+	inline bool operator!=(const node_iterator_impl<NodePtr>& lhs, const list_iterator_base& rhs);
 
 }
 }

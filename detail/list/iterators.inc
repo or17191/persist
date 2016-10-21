@@ -28,14 +28,6 @@ namespace list{
 	}
 
 	template<typename NodePtr>
-	template<typename OtherNode>
-	inline node_iterator_impl<NodePtr>::operator
-			list_iterator<OtherNode>() const{
-		using list_iterator_t = list_iterator<OtherNode>;
-		return valid() ? list_iterator_t{node_->get()} : list_iterator_t{};
-	}
-
-	template<typename NodePtr>
 	inline auto& node_iterator_impl<NodePtr>::dereference() const{
 		return *node_;
 	}
@@ -50,6 +42,17 @@ namespace list{
 	template<typename NodePtr>
 	inline bool node_iterator_impl<NodePtr>::valid() const{
 		return node_ != nullptr && (*node_) != nullptr;
+	}
+
+	template<typename NodePtr>
+	bool operator==(const node_iterator_impl<NodePtr>& lhs, const list_iterator_base& rhs){
+		using common_t = node_base const * const;
+		return static_cast<common_t>(lhs) == static_cast<common_t>(rhs);
+	}
+
+	template<typename NodePtr>
+	bool operator!=(const node_iterator_impl<NodePtr>& lhs, const list_iterator_base& rhs){
+		return !(lhs == rhs);
 	}
 }
 }
