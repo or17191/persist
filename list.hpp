@@ -42,8 +42,10 @@ namespace persist{
 			list(decltype(builder_t::make().finalize()) builder):
 				first_{std::move(builder.dst_)}, size_{builder.dst_size_}{}
 
-			auto make_builder() const{
-				return builder_t::make(first_, size_);
+			auto make_builder(const iterator_t& it) const{
+				auto b = builder_t::make(first_, size_);
+				b.template fast_forward<DataType>(it);
+				return b;
 			}
 
 	};

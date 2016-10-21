@@ -4,69 +4,55 @@
 namespace persist{
 namespace detail{
 namespace list{
-
-		template<typename DataType>
-		builder<DataType>::builder_imp::builder_imp():
+		builder_imp::builder_imp(size_t size):
 				dst_{},
 				dst_tail_{dst_},
-				dst_size_{0}{}
+				dst_size_{size}{}
 
-		template<typename DataType>
-		template<typename... Args>
-		inline auto& builder<DataType>::builder_imp::emplace_back(Args&&... args){
-			append(std::forward<Args>(args)...);
+		inline auto& builder_imp::emplace_back(builder_imp::node_ptr_t&& p){
+			append(std::move(p));
 			dst_size_++;
 			return *this;
 		}
 
-		template<typename DataType>
-		template<typename... Args>
-		inline void builder<DataType>::builder_imp::append(Args&&... args){
-			decltype(auto) node_p = node_t::make(std::forward<Args>(args)...);
-			*dst_tail_ = node_p;
+		inline void builder_imp::append(builder_imp::node_ptr_t&& p){
+			*dst_tail_ = std::move(p);
 			++dst_tail_;
 		}
 		
-		template<typename DataType>
-		inline auto&& builder<DataType>::builder_imp::finalize(){
+		inline auto&& builder_imp::finalize(){
 			return std::move(*this);
 		}
 
-		template<typename DataType>
-		builder<DataType>::coupled_builder_imp::coupled_builder_imp
-					(const node_ptr_t& src, size_t size):
-				builder_imp{},
-				src_cur_node_{src}{
-			this->dst_size_ = size;
-		}
+		coupled_builder_imp::coupled_builder_imp
+					(const coupled_builder_imp::node_ptr_t& src, size_t size):
+				builder_imp{size},
+				src_cur_node_{src}{}
 
 		template<typename DataType>
-		auto& builder<DataType>::coupled_builder_imp::fast_forward(iterator_t pos){
+		auto& coupled_builder_imp::fast_forward(const list_iterator_base& pos){
+			using node_t = node<DataType>;
 			for(; src_cur_node_!=pos; ++src_cur_node_){
 				auto p = static_cast<node_t const *>(src_cur_node_->get());
-				this->append(p->data_);
+				this->append(node_t::make(p->data_));
 			}
 			return *this;
 		}
 
-		template<typename DataType>
-		inline auto& builder<DataType>::coupled_builder_imp::skip(){
+		inline auto& coupled_builder_imp::skip(){
 			++src_cur_node_;
 			this->dst_size_--;
 			return *this;
 		}
 
-		template<typename DataType>
-		template<typename... Args>
-		inline auto& builder<DataType>::coupled_builder_imp::
-				emplace_back(Args&&... args){
+		inline auto& coupled_builder_imp::
+				emplace_back(coupled_builder_imp::node_ptr_t&& p){
 			return static_cast<coupled_builder_imp&>(
 				static_cast<builder_imp&>(*this).
-				emplace_back(std::forward<Args>(args)...));
+				emplace_back(std::move(p)));
 		}
 
-		template<typename DataType>
-		inline auto&& builder<DataType>::coupled_builder_imp::finalize(){
+		inline auto&& coupled_builder_imp::finalize(){
 			if(src_cur_node_.valid()){
 				*this->dst_tail_ = *src_cur_node_;
 			}	
@@ -79,7 +65,7 @@ namespace list{
 					const InputIt& last){
 			builder_imp b;
 			for(; first!=last; ++first){
-				b.emplace_back(*first);
+				b.emplace_back(builder::node_t::make(*first));
 			}
 			return b;
 		}
