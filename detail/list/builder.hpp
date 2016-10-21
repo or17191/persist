@@ -22,8 +22,7 @@ namespace list{
 			size_t dst_size_;
 	};
 
-	struct coupled_builder_imp: public builder_imp{
-		using builder_imp::builder_imp;
+	struct coupled_builder_imp: builder_imp{
 		coupled_builder_imp(const node_ptr_t& first, size_t size);
 
 		template<typename DataType>
@@ -38,8 +37,7 @@ namespace list{
 	template<typename DataType>
 	struct builder{
 		using node_t = node<DataType>;
-		using node_ptr_t = typename node_t::ptr_t;
-		using value_t = typename node_t::value_t;
+		using node_ptr_t = node_base::ptr_t;
 		using iterator_t = list_iterator<node_t>;
 
 		static inline auto make(const node_ptr_t& first, size_t size);

@@ -9,8 +9,8 @@ namespace persist{
 		private:
 			using builder_t = detail::list::builder<DataType>;
 			using node_t = typename builder_t::node_t;
+			using node_ptr_t = typename builder_t::node_ptr_t;
 		public:
-			using value_t = typename builder_t::value_t;
 			using iterator_t = typename builder_t::iterator_t;
 			
 			list(): first_{nullptr}, size_{}{}
@@ -36,7 +36,7 @@ namespace persist{
 			}
 
 		private:
-			typename node_t::ptr_t first_;
+			node_ptr_t first_;
 			decltype(builder_t::make().dst_size_) size_;
 
 			list(decltype(builder_t::make().finalize()) builder):
