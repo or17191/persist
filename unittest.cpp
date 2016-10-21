@@ -121,3 +121,9 @@ TEST_F(ListTest, ListTestBegin){
 	ASSERT_EQ(my_list, my_list3);
 	CHECK_SIZE(my_list3);
 }
+
+TEST(ListTestVector, ListTestCreation){
+	auto reference_list = std::list<std::vector<int>>{{1, 2}, {3, 4}};
+	auto my_list = persist::list<std::vector<int>>{reference_list.begin(), reference_list.end()};
+	ASSERT_RANGES_EQ(my_list, reference_list);
+}
