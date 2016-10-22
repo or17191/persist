@@ -17,7 +17,7 @@ if(test)
 	enable_testing()
 	
 	include_directories("${gtest_SOURCE_DIR}/include" "${gtest_SOURCE_DIR}")
-	add_executable(unittest unittest.cpp)
+	add_executable(unittest test_list.cpp)
 	target_link_libraries(unittest gtest gtest_main)
 	add_test(NAME unittest COMMAND unittest)
 endif()
