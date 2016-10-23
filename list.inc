@@ -39,12 +39,17 @@ namespace persist{
 	}
 
 	template<typename DataType>
-	std::ostream& operator<<(std::ostream& stream, const list<DataType>& list){
-		stream << '{';
-		for(const auto& e: list){
-			stream << e << ',' << ' ';
+	std::ostream& operator<<(std::ostream& stream, const list<DataType>& lst){
+		stream << "[";
+		auto pos = lst.begin(), end = lst.end();
+		if(pos!=end){
+			stream << *pos;
+			++pos;
 		}
-		stream << '}';
+		for(; pos!=end; ++pos){
+			stream << ", " << *pos;
+		}
+		stream << "]";
 		return stream;
 	}
 }

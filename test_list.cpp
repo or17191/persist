@@ -122,6 +122,12 @@ TEST_F(ListTest, ListTestBegin){
 	CHECK_SIZE(my_list3);
 }
 
+TEST_F(ListTest, ListTestToString){
+	std::ostringstream s;
+	s << my_list;
+	ASSERT_EQ("[1, 2, 3, 4, 5]", s.str());
+}
+
 TEST(ListTestVector, ListTestCreation){
 	auto reference_list = std::list<std::vector<int>>{{1, 2}, {3, 4}};
 	auto my_list = persist::list<std::vector<int>>{reference_list.begin(), reference_list.end()};
