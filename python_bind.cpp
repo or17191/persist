@@ -1,5 +1,6 @@
 #include "list.hpp"
 #include <python2.7/pybind11/pybind11.h>
+#include <python2.7/pybind11/operators.h>
 #include <sstream>
 #include <memory>
 
@@ -49,6 +50,7 @@ PYBIND11_PLUGIN(pyrsist){
 		[](const list_t& lst)
 			{return py::make_iterator(lst.begin(), lst.end());},
 		py::keep_alive<0, 1>());
+	lst.def(py::self==py::self);
 
 	return m.ptr();
 }
