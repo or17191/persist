@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.5)
+
+execute_process(COMMAND python-config --cflags OUTPUT_VARIABLE PYBIND_CF_FLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+string(REPLACE "2.7" "3.5" PYBIND_CF_FLAGS ${PYBIND_CF_FLAGS})
+separate_arguments(PYBIND_CF_FLAGS)
+execute_process(COMMAND python-config --ldflags OUTPUT_VARIABLE PYBIND_LD_FLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+string(REPLACE "2.7" "3.5" PYBIND_LD_FLAGS ${PYBIND_LD_FLAGS})
+separate_arguments(PYBIND_LD_FLAGS)
+add_library(pyrsist SHARED module.cpp list.cpp)
+target_compile_options(pyrsist PRIVATE ${PYBIND_CF_FLAGS})
+target_compile_options(pyrsist PRIVATE ${PYBIND_LD_FLAGS})
+set_target_properties(pyrsist PROPERTIES PREFIX "")
