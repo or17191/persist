@@ -1,6 +1,6 @@
 #pragma once
 
-#include <python3.5/pybind11/pybind11.h>
+#include <pybind11/pybind11.h>
 #include <string>
 
 

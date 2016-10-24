@@ -8,4 +8,4 @@ add_executable(unittest test_list.cpp)
 target_link_libraries(unittest gtest gtest_main)
 add_test(NAME cpp COMMAND unittest)
 
-add_test(NAME python COMMAND python3 -m pytest "${CMAKE_CURRENT_SOURCE_DIR}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+add_test(NAME python COMMAND python3 -m pytest "${CMAKE_CURRENT_SOURCE_DIR}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../python_bind")

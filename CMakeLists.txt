@@ -13,8 +13,11 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++14")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
-if(test)
-	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/test")
-endif()
 
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/python_bind")
+
+if(test)
+	set(PYRSIST_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_bind")
+	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
+endif()
+

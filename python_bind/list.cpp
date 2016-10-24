@@ -1,7 +1,7 @@
 #include "list.hpp"
 #include "common.hpp"
-#include <python3.5/pybind11/pybind11.h>
-#include <python3.5/pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
 #include <sstream>
 
 namespace py=pybind11;
