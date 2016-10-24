@@ -19,7 +19,9 @@ if(test)
 	include_directories("${gtest_SOURCE_DIR}/include" "${gtest_SOURCE_DIR}")
 	add_executable(unittest test_list.cpp)
 	target_link_libraries(unittest gtest gtest_main)
-	add_test(NAME unittest COMMAND unittest)
+	add_test(NAME cpp COMMAND unittest)
+
+	add_test(NAME python COMMAND python3 -m pytest "${CMAKE_SOURCE_DIR}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 endif()
 
 execute_process(COMMAND python-config --cflags OUTPUT_VARIABLE PYBIND_CF_FLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
