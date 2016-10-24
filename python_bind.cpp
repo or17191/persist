@@ -11,6 +11,14 @@ std::string repr(const py::object & obj){
 	return obj.attr("__repr__").cast<py::object>()().cast<py::str>();
 }
 
+bool eq(const py::object & lhs, const py::object & rhs){
+	return lhs.attr("__eq__").cast<py::object>()(rhs).cast<py::bool_>();
+}
+
+bool ne(const py::object & lhs, const py::object & rhs){
+	return !eq(lhs, rhs);
+}
+
 class obj_iterator: public py::iterator{
 public:
 	using py::iterator::iterator;
@@ -34,6 +42,24 @@ auto list_repr(const list_t& lst){
 	return ret.str();
 }
 
+namespace persist{
+template<>
+bool operator==<py::object>(const list<py::object>& lhs, const list<py::object>& rhs){
+	if(lhs.size() != rhs.size()){
+		return false;
+	}
+	for(auto it_l=lhs.begin(), it_r=rhs.begin();
+				it_l!=lhs.end(); ++it_l, ++it_r){
+		if(it_l == it_r){
+			return true;
+		} else if(!eq(*it_l, *it_r)){
+			return false;
+		}
+	}
+	return true;
+}
+}
+
 PYBIND11_PLUGIN(pyrsist){
 	py::module m("pyrsist", "Python bindings for the persist c++ package");
 
@@ -51,6 +77,5 @@ PYBIND11_PLUGIN(pyrsist){
 			{return py::make_iterator(lst.begin(), lst.end());},
 		py::keep_alive<0, 1>());
 	lst.def(py::self==py::self);
-
 	return m.ptr();
 }
