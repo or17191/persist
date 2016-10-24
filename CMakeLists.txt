@@ -18,6 +18,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/python_bind")
 
 if(test)
 	set(PYRSIST_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_bind")
+	enable_testing()
 	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
 endif()
 
