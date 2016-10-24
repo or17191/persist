@@ -27,20 +27,6 @@ public:
 	}
 };
 
-auto list_repr(const list_t& lst){
-	std::ostringstream ret;
-	ret << "List([";
-	auto pos = lst.begin(), end = lst.end();
-	if(pos!=end){
-		ret << repr(*pos);
-		pos++;
-	}
-	for(; pos!=end; pos++){
-		ret << ", " << repr(*pos);
-	}
-	ret << "])";
-	return ret.str();
-}
 
 namespace persist{
 template<>
@@ -58,6 +44,21 @@ bool operator==<py::object>(const list<py::object>& lhs, const list<py::object>&
 	}
 	return true;
 }
+
+template<>
+std::ostream& operator<< <py::object>(std::ostream& stream, const list<py::object>& lst){
+	stream << "[";
+	auto pos = lst.begin(), end = lst.end();
+	if(pos!=end){
+		stream << repr(*pos);
+		++pos;
+	}
+	for(; pos!=end; ++pos){
+		stream << ", " << repr(*pos);
+	}
+	stream << "]";
+	return stream;
+}
 }
 
 PYBIND11_PLUGIN(pyrsist){
@@ -71,7 +72,10 @@ PYBIND11_PLUGIN(pyrsist){
 				obj_iterator(it.begin()),
 				obj_iterator(it.end()));});
 	lst.def("__len__", &list_t::size);
-	lst.def("__repr__", &list_repr);
+	lst.def("__repr__",
+		[](const list_t& lst)
+		{std::ostringstream ret; ret << "List(" << lst << ')';
+		return ret.str();});
 	lst.def("__iter__",
 		[](const list_t& lst)
 			{return py::make_iterator(lst.begin(), lst.end());},

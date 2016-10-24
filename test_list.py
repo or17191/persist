@@ -22,6 +22,9 @@ def test_list_creation(reference_list, my_list):
     verify_list(reference_list, my_list)
     assert my_list == List(my_list)
 
+def test_list_repr(reference_list, my_list):
+    assert repr(my_list) == 'List({!r})'.format(reference_list)
+
 def test_complex_list():
     ref_lst = [list(range(i)) for i in range(5)]
     my_lst = List(list(range(i)) for i in range(5))
